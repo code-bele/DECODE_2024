@@ -12,78 +12,153 @@ ui <- fluidPage(
   # Application title
   titlePanel("Laboratory parameters - summary"),
   
-  # Main panel to show the plot
-  mainPanel(
+  # Main panel
+  fluidRow(
+    column(12,
     tabsetPanel(
       id = "tabs",
+      
+      # Tab panel to display box plot
       tabPanel(
         "BoxPlot",
-        selectInput("boxparam", "Parameter",
-                    choices = c("BASO", "EOS", "HCT", "HGB", "LYM", "MCH", "MCHC", "MCV", "MONO", "PLAT", "RBC", "WBC"),
-                    selected = "HGB"),
-        selectInput("boxtrtarm", "Treatment Arm",
-                    choices = c("Placebo", "Low dose", "High dose"),
-                    selected = "Placebo"),
-        plotlyOutput("boxPlot")),
+        
+        # Description
+        div(
+          style = "margin-bottom: 20px; padding: 10px; background-color: #f9f9f9; border-radius: 5px;",
+          h4("Explore the change and distribution of laboratory parameters during the course of trial."),
+          p("Use the controls below to filter and customize the time-series box plot.")
+        ),
+        
+        # Customization filters and controls
+        fluidRow(
+          column(2,
+                  selectInput("boxparam", "Parameter",
+                      choices = c("BASO", "EOS", "HCT", "HGB", "LYM", "MCH", "MCHC", "MCV", "MONO", "PLAT", "RBC", "WBC"),
+                      selected = "HGB")
+        ),
+        
+        column(3,
+                  selectInput("boxtrtarm", "Treatment Arm",
+                      choices = c("Placebo", "Low dose", "High dose"),
+                      selected = "Placebo")
+        )),
+        
+        # Time-series box pot
+        div(
+          style = "margin-top: 30px;",
+          plotlyOutput("boxPlot", height = "600px", width = "100%")
+        )
+      ),
       
+      # Tab panel to display dumbbell plot
       tabPanel(
         "Dumbbell plot",
-        selectInput("dpparam", "Parameter",
-                    choices = c("BASO", "EOS", "HCT", "HGB", "LYM", "MCH", "MCHC", "MCV", "MONO", "PLAT", "RBC", "WBC"),
-                    selected = "HGB"),
-        selectInput("start", "Start",
-                    choices = c("Baseline","Week 2","Week 4","Week 6","Week 8","Week 12","Week 16","Week 20","Week 24","End of Treatment","Week 26"),
-                    selected = "Baseline"),
-        conditionalPanel(
-          condition = 'input.start == "Baseline"',
-          selectInput("end", "End",
-                      choices = c("Week 2","Week 4","Week 6","Week 8","Week 12","Week 16","Week 20","Week 24","End of Treatment","Week 26"),
-                      selected = "Week 26")),
-        conditionalPanel(
-          condition = 'input.start == "Week 2"',
-          selectInput("end", "End",
-                      choices = c("Week 4","Week 6","Week 8","Week 12","Week 16","Week 20","Week 24","End of Treatment","Week 26"),
-                      selected = "Week 26")),
-        conditionalPanel(
-          condition = 'input.start == "Week 4"',
-          selectInput("end", "End",
-                      choices = c("Week 6","Week 8","Week 12","Week 16","Week 20","Week 24","End of Treatment","Week 26"),
-                      selected = "Week 26")),
-        conditionalPanel(
-          condition = 'input.start == "Week 6"',
-          selectInput("end", "End",
-                      choices = c("Week 8","Week 12","Week 16","Week 20","Week 24","End of Treatment","Week 26"),
-                      selected = "Week 26")),
-        conditionalPanel(
-          condition = 'input.start == "Week 8"',
-          selectInput("end", "End",
-                      choices = c("Week 12","Week 16","Week 20","Week 24","End of Treatment","Week 26"),
-                      selected = "Week 26")),
-        conditionalPanel(
-          condition = 'input.start == "Week 12"',
-          selectInput("end", "End",
-                      choices = c("Week 16","Week 20","Week 24","End of Treatment","Week 26"),
-                      selected = "Week 26")),
-        conditionalPanel(
-          condition = 'input.start == "Week 16"',
-          selectInput("end", "End",
-                      choices = c("Week 20","Week 24","End of Treatment","Week 26"),
-                      selected = "Week 26")),
-        conditionalPanel(
-          condition = 'input.start == "Week 20"',
-          selectInput("end", "End",
-                      choices = c("Week 24","End of Treatment","Week 26"),
-                      selected = "Week 26")),
-        conditionalPanel(
-          condition = 'input.start == "Week 24"',
-          selectInput("end", "End",
-                      choices = c("End of Treatment","Week 26"),
-                      selected = "Week 26")),
-        plotlyOutput("dbPlot"))
+        
+        # Description
+        div(
+          style = "margin-bottom: 20px; padding: 10px; background-color: #f9f9f9; border-radius: 5px;",
+          h4("Explore the change of laboratory parameters during the course of trial between specific time periods across different treatment arms."),
+          p("Use the controls below to filter and customize the dumbbell plot."),
+          tags$a(href="https://plotly.com/~nimal/1/", "Overview plot")
+        ),
+        
+        # Customization filters and controls
+        fluidRow(
+          column(2,
+            selectInput("dpparam", "Parameter",
+                        choices = c("BASO", "EOS", "HCT", "HGB", "LYM", "MCH", "MCHC", "MCV", "MONO", "PLAT", "RBC", "WBC"),
+                        selected = "HGB")
+            ),
+        
+          column(3,
+            selectInput("start", "Start",
+                        choices = c("Baseline","Week 2","Week 4","Week 6","Week 8","Week 12","Week 16","Week 20","Week 24","End of Treatment","Week 26"),
+                        selected = "Baseline")
+           ),
+        
+          column(3,
+            conditionalPanel(
+              condition = 'input.start == "Baseline"',
+              selectInput("end", "End",
+                          choices = c("Week 2","Week 4","Week 6","Week 8","Week 12","Week 16","Week 20","Week 24","End of Treatment","Week 26"),
+                          selected = "Week 26")),
+           
+            conditionalPanel(
+              condition = 'input.start == "Week 2"',
+              selectInput("end", "End",
+                          choices = c("Week 4","Week 6","Week 8","Week 12","Week 16","Week 20","Week 24","End of Treatment","Week 26"),
+                          selected = "Week 26")),
+           
+            conditionalPanel(
+              condition = 'input.start == "Week 4"',
+              selectInput("end", "End",
+                          choices = c("Week 6","Week 8","Week 12","Week 16","Week 20","Week 24","End of Treatment","Week 26"),
+                          selected = "Week 26")),
+           
+           conditionalPanel(
+              condition = 'input.start == "Week 6"',
+              selectInput("end", "End",
+                          choices = c("Week 8","Week 12","Week 16","Week 20","Week 24","End of Treatment","Week 26"),
+                          selected = "Week 26")),
+          
+            conditionalPanel(
+              condition = 'input.start == "Week 8"',
+              selectInput("end", "End",
+                          choices = c("Week 12","Week 16","Week 20","Week 24","End of Treatment","Week 26"),
+                          selected = "Week 26")),
+          
+            conditionalPanel(
+            condition = 'input.start == "Week 12"',
+              selectInput("end", "End",
+                        choices = c("Week 16","Week 20","Week 24","End of Treatment","Week 26"),
+                        selected = "Week 26")),
+           
+          conditionalPanel(
+            condition = 'input.start == "Week 16"',
+            selectInput("end", "End",
+                        choices = c("Week 20","Week 24","End of Treatment","Week 26"),
+                        selected = "Week 26")),
+       
+          conditionalPanel(
+            condition = 'input.start == "Week 20"',
+            selectInput("end", "End",
+                        choices = c("Week 24","End of Treatment","Week 26"),
+                        selected = "Week 26")),
+          
+            conditionalPanel(
+            condition = 'input.start == "Week 24"',
+              selectInput("end", "End",
+                        choices = c("End of Treatment","Week 26"),
+                        selected = "Week 26"))
+            )
+        ),
+        
+        div(
+          style = "margin-top: 30px;",
+          plotlyOutput("dbPlot", height = "100%", width = "100%")
+        )
+      ),
+      
+      tabPanel(
+        "Table",
+        
+        # Description
+        div(
+          style = "margin-bottom: 20px; padding: 10px; background-color: #f9f9f9; border-radius: 5px;",
+          h4("Table of minimum and maximum values for each LBNRIND flag"),
+          p("Ambiguous values have been highlighted in red.")
+        ),
+        
+        # Table
+        div(
+          style = "margin-top: 30px;",
+          imageOutput("table", height = "100%", width = "100%")
+          )
+        )
+      )
     )
   )
 )
-
 
 # Define server logic
 server <- function(input, output) {
@@ -200,6 +275,10 @@ server <- function(input, output) {
       p <- p + geom_hline(yintercept = 130, color = "green", linetype = "dashed", size = 1)
       p <- p + geom_hline(yintercept = 395, color = "red", linetype = "dashed", size = 1)
     }
+    
+    if(input$boxparam == "LYM"){
+      p <- p + geom_hline(yintercept = .8, color = "green", linetype = "dashed", size = 1)
+    }
      
     ggplotly(p)
   })
@@ -258,8 +337,23 @@ server <- function(input, output) {
         p <- p + geom_vline(xintercept = 395, color = "red", linetype = "dashed", size = 1)
       }
       
+      if(input$dpparam == "LYM"){
+        p <- p + geom_vline(xintercept = .8, color = "green", linetype = "dashed", size = 1)
+      }
+      
     ggplotly(p, tooltip = "text")
   })
+  
+  
+    # A plot of fixed size
+    output$table <- renderImage({
+      
+      img_file <- './table.png'
+
+      # Return a list
+      list(src = img_file,
+           alt = "Table containing min. and max. values for low, normal and high flags")}
+    , deleteFile = FALSE)
 }
 
 # Run the application 
